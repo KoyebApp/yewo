@@ -13,7 +13,8 @@ class Ytdl2 {
     };
   }
 
-  async fetchVideoData(videoUrl) {
+  // Retry logic for fetching video data in case of failure
+  async fetchVideoData(videoUrl, retries = 3, delay = 2000) {
     const requestConfig = {
       method: "post",
       maxBodyLength: Infinity,
@@ -21,22 +22,34 @@ class Ytdl2 {
       headers: this.headers,
       data: `query=${encodeURIComponent(videoUrl)}`,
     };
+
     try {
       const response = await axios.request(requestConfig);
-      console.log("Video data response:", response.data); // Debug log
+      console.log("Video data response:", response.data); // Debug log to see the API response
       return response.data;
     } catch (error) {
+      // Detailed error handling
       if (error.response) {
-        // Handle error with detailed information
+        // The request was made and the server responded with an error status
         console.error("Error Response:", error.response.data);
         console.error("Status Code:", error.response.status);
         console.error("Headers:", error.response.headers);
       } else if (error.request) {
+        // The request was made but no response was received
         console.error("Error Request:", error.request);
       } else {
+        // Something went wrong in setting up the request
         console.error("Error Message:", error.message);
       }
-      throw new Error("Request failed");
+
+      // Retry mechanism in case of failure
+      if (retries > 0) {
+        console.log(`Retrying... (${retries} attempts left)`);
+        await new Promise(resolve => setTimeout(resolve, delay)); // Delay before retry
+        return this.fetchVideoData(videoUrl, retries - 1, delay); // Retry the request
+      }
+
+      throw new Error("Request failed after multiple retries");
     }
   }
 
@@ -76,6 +89,7 @@ class Ytdl2 {
       },
       data: `vid=${videoId}&k=${encodeURIComponent(formatId)}`,
     };
+
     try {
       const response = await axios.request(requestConfig);
       return response.data;
