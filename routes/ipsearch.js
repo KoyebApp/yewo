@@ -1,0 +1,17 @@
+import getipdetails from '../func/search/ipsearch.js'
+import express from 'express'
+
+const router = express.Router()
+
+router.get('/', async (req, res) => {
+  const ip = req.query.ip
+  if (!ip) return res.json({ creator: 'Qasim Ali', status: false, msg: 'ip is required' })
+  try {
+    const result = await getipdetails(ip)
+    res.json({ creator: 'Qasim Ali', result })
+  } catch (error) {
+    res.status(500).json({ creator: 'Qasim Ali', status: false, msg: 'Internal Server Error' })
+  }
+})
+
+export default router

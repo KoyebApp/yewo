@@ -1,0 +1,20 @@
+import { bitly, tinyurl } from '../func/tools/shortenlink.js'
+import express from 'express'
+
+const router = express.Router()
+
+router.get('/bitly', async (req, res) => {
+  const url = req.query.url
+  if (!url) return res.json({ creator: 'Qasim Ali', status: false, msg: 'url is required' })
+  const result = await bitly(url)
+  res.json({ creator: 'Qasim Ali', status: true, result })
+})
+
+router.get('/tinyurl', async (req, res) => {
+  const url = req.query.url
+  if (!url) return res.json({ creator: 'Qasim Ali', status: false, msg: 'url is required' })
+  const result = await tinyurl(url)
+  res.json({ creator: 'Qasim Ali', status: true, result })
+})
+
+export default router
