@@ -48,9 +48,22 @@ class YTDL {
       console.log(yt.formats);
 
       // Select the best video format (audio and video combined)
-      const link = ytdl.chooseFormat(yt.formats, { filter: 'audioandvideo', quality: 'highest' });
+      let selectedFormat = null;
+      // Prioritize video with both audio and video, and ensure it's not live
+      for (let format of yt.formats) {
+        if (format.hasVideo && format.hasAudio && !format.isLive && (format.isHLS || format.isDashMPD)) {
+          if (!selectedFormat || format.bitrate > selectedFormat.bitrate) {
+            selectedFormat = format;
+          }
+        }
+      }
 
-      if (!link) {
+      if (!selectedFormat) {
+        // If no suitable format is found, fallback to the best available format
+        selectedFormat = ytdl.chooseFormat(yt.formats, { filter: 'audioandvideo', quality: 'highest' });
+      }
+
+      if (!selectedFormat) {
         throw new Error('No suitable video format found');
       }
 
@@ -58,7 +71,7 @@ class YTDL {
         creator: 'Qasim Ali',
         title: yt.videoDetails.title,
         author: yt.videoDetails.author.name,
-        video_url: link.url,
+        video_url: selectedFormat.url,
         description: yt.videoDetails.description,
       }
     } catch (error) {
@@ -79,9 +92,22 @@ class YTDL {
       console.log(yt.formats);
 
       // Select the best audio format
-      const link = ytdl.chooseFormat(yt.formats, { filter: 'audioonly', quality: 'highestaudio' });
+      let selectedAudioFormat = null;
+      // Prioritize audio-only formats, ensuring it is not live and is either HLS or DASH
+      for (let format of yt.formats) {
+        if (format.hasAudio && !format.hasVideo && !format.isLive && (format.isHLS || format.isDashMPD)) {
+          if (!selectedAudioFormat || format.audioBitrate > selectedAudioFormat.audioBitrate) {
+            selectedAudioFormat = format;
+          }
+        }
+      }
 
-      if (!link) {
+      if (!selectedAudioFormat) {
+        // If no suitable format is found, fallback to the best available audio format
+        selectedAudioFormat = ytdl.chooseFormat(yt.formats, { filter: 'audioonly', quality: 'highestaudio' });
+      }
+
+      if (!selectedAudioFormat) {
         throw new Error('No suitable audio format found');
       }
 
@@ -89,7 +115,7 @@ class YTDL {
         creator: 'Qasim Ali',
         title: yt.videoDetails.title,
         author: yt.videoDetails.author.name,
-        audio_url: link.url,
+        audio_url: selectedAudioFormat.url,
         description: yt.videoDetails.description,
       }
     } catch (error) {
