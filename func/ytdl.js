@@ -59,8 +59,14 @@ class YTDL {
       }
 
       if (!selectedFormat) {
-        // If no suitable format is found, fallback to the best available format
-        selectedFormat = ytdl.chooseFormat(yt.formats, { filter: 'audioandvideo', quality: 'highest' });
+        // If no suitable format is found, fallback to manually selecting the highest bitrate
+        selectedFormat = yt.formats.filter(format => format.hasVideo && format.hasAudio)
+          .reduce((bestFormat, currentFormat) => {
+            if (!bestFormat || currentFormat.bitrate > bestFormat.bitrate) {
+              return currentFormat;
+            }
+            return bestFormat;
+          }, null);
       }
 
       if (!selectedFormat) {
@@ -103,8 +109,14 @@ class YTDL {
       }
 
       if (!selectedAudioFormat) {
-        // If no suitable format is found, fallback to the best available audio format
-        selectedAudioFormat = ytdl.chooseFormat(yt.formats, { filter: 'audioonly', quality: 'highestaudio' });
+        // If no suitable format is found, fallback to manually selecting the highest audio bitrate
+        selectedAudioFormat = yt.formats.filter(format => format.hasAudio && !format.hasVideo)
+          .reduce((bestFormat, currentFormat) => {
+            if (!bestFormat || currentFormat.audioBitrate > bestFormat.audioBitrate) {
+              return currentFormat;
+            }
+            return bestFormat;
+          }, null);
       }
 
       if (!selectedAudioFormat) {
