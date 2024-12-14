@@ -7,9 +7,9 @@ class Ytdl2 {
     this.headers = {
       accept: "*/*",
       "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-      "Origin": "https://tomp3.cc",
+      "Origin": "https://tomp3.cc",  // Generalized Referer
       "Connection": "keep-alive",
-      "Referer": "https://tomp3.cc/youtube-downloader/8uioXLxzy4w"
+      "Referer": "https://tomp3.cc",  // Generalized Referer
     };
   }
 
@@ -23,9 +23,19 @@ class Ytdl2 {
     };
     try {
       const response = await axios.request(requestConfig);
+      console.log("Video data response:", response.data); // Debug log
       return response.data;
     } catch (error) {
-      console.error("Error fetching video data:", error);
+      if (error.response) {
+        // Handle error with detailed information
+        console.error("Error Response:", error.response.data);
+        console.error("Status Code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("Error Request:", error.request);
+      } else {
+        console.error("Error Message:", error.message);
+      }
       throw new Error("Request failed");
     }
   }
@@ -120,4 +130,3 @@ class Ytdl2 {
 }
 
 export default Ytdl2;
-
