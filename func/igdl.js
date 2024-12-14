@@ -1,38 +1,31 @@
 import axios from "axios";
 
-/*
-  Created by https://github.com/ztrdiamond !
-  Source: https://whatsapp.com/channel/0029VagFeoY9cDDa9ulpwM0T
-  "Aku janji jika hapus watermark ini maka aku rela miskin hingga 7 turunan"
-*/
-
 async function igdl(url) {
   try {
-    return await new Promise(async(resolve, reject) => {
-      // Check for valid Instagram URL format
+    return await new Promise(async (resolve, reject) => {
+      // Validate URL
       if (!/^https?:\/\/(?:www\.)?instagram\.com\/(?:p|reel|tv)\/[a-zA-Z0-9_-]+\/?.*/.test(url)) {
         reject("invalid url input!");
       }
 
-      // Headers with the correct format
+      // Headers with potential Authorization (replace with actual API key if needed)
       const headers = {
         headers: {
-          "Content-Type": "application/json",  // Corrected Content-Type
+          "Content-Type": "application/json",
           "Origin": "https://publer.io",
           "Referer": "https://publer.io/",
           "User-Agent": "axios/1.7.9",
-          // Add authorization token if required
-          // "Authorization": "Bearer YOUR_API_KEY"
+          "Authorization": "Bearer YOUR_API_KEY"  // Ensure you replace this with the correct key if necessary
         }
       };
 
-      // Making the POST request
+      // POST request to Publer API
       axios.post("https://app.publer.io/hooks/media", { iphone: false, url }, headers)
         .then(async res => {
           const task_id = res.data.job_id;
-          const task = async() => (await axios.get(`https://app.publer.io/api/v1/job_status/${task_id}`, headers)).data;
+          const task = async () => (await axios.get(`https://app.publer.io/api/v1/job_status/${task_id}`, headers)).data;
 
-          // Polling the task status
+          // Polling to check the status of the media download
           async function process() {
             const { status, payload } = await task();
             if (status === "complete") {
@@ -47,17 +40,17 @@ async function igdl(url) {
                 media
               });
             }
-            setTimeout(process, 1000);  // Retry after 1 second
+            setTimeout(process, 1000);  // Retry every 1 second
           }
 
-          await process();  // Start polling the task
+          await process();  // Start the polling process
         })
-        .catch(e => reject(e));  // Catch any errors
+        .catch(e => reject(e));  // Catch errors in POST request
     });
   } catch (e) {
     return {
       success: false,
-      errors: [e]  // Return errors
+      errors: [e]
     };
   }
 }
