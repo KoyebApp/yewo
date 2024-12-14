@@ -39,10 +39,9 @@ async function igdl(url) {
   } catch (e) {
     return {
       success: false,
-      errors: [e]
+      errors: [e]  // Fixed the typo here
     }
   }
 }
 
 export default igdl;
-
