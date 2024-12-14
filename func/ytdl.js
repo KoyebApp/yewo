@@ -36,13 +36,23 @@ class YTDL {
     }
   }
 
+  // Function to get best video with audio
   async ytvideo(url) {
     try {
       if (!this.client) {
         await this.createClient()
       }
       const yt = await ytdl.getInfo(url, { requestOptions: { client: this.client } })
-      const link = ytdl.chooseFormat(yt.formats, { quality: 'best', filter: 'audioandvideo' })
+
+      // Log available formats for debugging
+      console.log(yt.formats);
+
+      // Select the best video format (audio and video combined)
+      const link = ytdl.chooseFormat(yt.formats, { filter: 'audioandvideo', quality: 'highest' });
+
+      if (!link) {
+        throw new Error('No suitable video format found');
+      }
 
       return {
         creator: 'Qasim Ali',
@@ -57,13 +67,23 @@ class YTDL {
     }
   }
 
+  // Function to get best audio
   async ytaudio(url) {
     try {
       if (!this.client) {
         await this.createClient()
       }
       const yt = await ytdl.getInfo(url, { requestOptions: { client: this.client } })
-      const link = ytdl.chooseFormat(yt.formats, { quality: 'bestaudio', filter: 'audioonly' })
+
+      // Log available formats for debugging
+      console.log(yt.formats);
+
+      // Select the best audio format
+      const link = ytdl.chooseFormat(yt.formats, { filter: 'audioonly', quality: 'highestaudio' });
+
+      if (!link) {
+        throw new Error('No suitable audio format found');
+      }
 
       return {
         creator: 'Qasim Ali',
