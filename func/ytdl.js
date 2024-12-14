@@ -42,7 +42,7 @@ class YTDL {
         await this.createClient()
       }
       const yt = await ytdl.getInfo(url, { requestOptions: { client: this.client } })
-      const link = ytdl.chooseFormat(yt.formats, { quality: 'highest', filter: 'audioandvideo' })
+      const link = ytdl.chooseFormat(yt.formats, { quality: 'best', filter: 'audioandvideo' })
 
       return {
         creator: 'Qasim Ali',
@@ -63,7 +63,7 @@ class YTDL {
         await this.createClient()
       }
       const yt = await ytdl.getInfo(url, { requestOptions: { client: this.client } })
-      const link = ytdl.chooseFormat(yt.formats, { quality: 'highestaudio' })
+      const link = ytdl.chooseFormat(yt.formats, { quality: 'bestaudio', filter: 'audioonly' })
 
       return {
         creator: 'Qasim Ali',
