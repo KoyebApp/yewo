@@ -31,7 +31,7 @@
     "random-useragent": "^0.5.0",
     "request": "^2.88.2",
     "sequelize": "^6.37.3",
-    "tiktok-scraper": "^1.4.12",
+    "tiktok-scraper": "^1.4.36",
     "yt-search": "^2.11.1"
   }
 }
