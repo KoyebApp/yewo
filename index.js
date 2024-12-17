@@ -74,7 +74,7 @@ app.use('/bingimg', bingimg)
 app.use('/vadapav', vadapav)
 app.use('/news', news)
 app.use('/photooxy', photooxy)
-app.use('/tiktok', tiktok)
+app.use('/tiktok', TikTok)
 
 app.listen(8080, () => {
   console.log('Server is running on port 8080')
