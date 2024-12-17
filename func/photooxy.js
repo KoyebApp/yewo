@@ -53,7 +53,184 @@ async function pRomantic(text1) {
   });
 }
 
-// Repeat for other functions...
+async function pSmoke(text1) {
+  return new Promise((resolve, reject) => {
+    const options = { method: 'POST',
+      url: tema.smoke,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      formData: { text_1: text1, login: 'OK' } };
+    
+    request(options, async function (error, response, body) {
+      if (error) throw new Error(error);
+      const $ = cheerio.load(body);
+      const result = {
+           url: $('div.btn-group > a').attr('href')
+      };
+      resolve(result);
+    });
+  });
+}
+
+async function pBurnPapper(text1) {
+  return new Promise((resolve, reject) => {
+    const options = { method: 'POST',
+      url: tema.burnpapper,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      formData: { text_1: text1, login: 'OK' } };
+    
+    request(options, async function (error, response, body) {
+      if (error) throw new Error(error);
+      const $ = cheerio.load(body);
+      const result = {
+           url: $('div.btn-group > a').attr('href')
+      };
+      resolve(result);
+    });
+  });
+}
+
+async function pNaruto(text1) {
+  return new Promise((resolve, reject) => {
+    const options = { method: 'POST',
+      url: tema.naruto,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      formData: { text_1: text1, login: 'OK' } };
+    
+    request(options, async function (error, response, body) {
+      if (error) throw new Error(error);
+      const $ = cheerio.load(body);
+      const result = {
+           url: $('div.btn-group > a').attr('href')
+      };
+      resolve(result);
+    });
+  });
+}
+
+async function pLoveMsg(text1) {
+  return new Promise((resolve, reject) => {
+    const options = { method: 'POST',
+      url: tema.lovemsg,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      formData: { text_1: text1, login: 'OK' } };
+    
+    request(options, async function (error, response, body) {
+      if (error) throw new Error(error);
+      const $ = cheerio.load(body);
+      const result = {
+           url: $('div.btn-group > a').attr('href')
+      };
+      resolve(result);
+    });
+  });
+}
+
+async function pMsgGrass(text1) {
+  return new Promise((resolve, reject) => {
+    const options = { method: 'POST',
+      url: tema.msggrass,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      formData: { text_1: text1, login: 'OK' } };
+    
+    request(options, async function (error, response, body) {
+      if (error) throw new Error(error);
+      const $ = cheerio.load(body);
+      const result = {
+           url: $('div.btn-group > a').attr('href')
+      };
+      resolve(result);
+    });
+  });
+}
+
+async function pGlitch(text1) {
+  return new Promise((resolve, reject) => {
+    const options = { method: 'POST',
+      url: tema.glitch,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      formData: { text_1: text1, login: 'OK' } };
+    
+    request(options, async function (error, response, body) {
+      if (error) throw new Error(error);
+      const $ = cheerio.load(body);
+      const result = {
+           url: $('div.btn-group > a').attr('href')
+      };
+      resolve(result);
+    });
+  });
+}
+
+async function pDoubleHeart(text1) {
+  return new Promise((resolve, reject) => {
+    const options = { method: 'POST',
+      url: tema.houbleheart,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      formData: { text_1: text1, login: 'OK' } };
+    
+    request(options, async function (error, response, body) {
+      if (error) throw new Error(error);
+      const $ = cheerio.load(body);
+      const result = {
+           url: $('div.btn-group > a').attr('href')
+      };
+      resolve(result);
+    });
+  });
+}
+
+async function pCoffeCup(text1) {
+  return new Promise((resolve, reject) => {
+    const options = { method: 'POST',
+      url: tema.coffecup,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      formData: { text_1: text1, login: 'OK' } };
+    
+    request(options, async function (error, response, body) {
+      if (error) throw new Error(error);
+      const $ = cheerio.load(body);
+      const result = {
+           url: $('div.btn-group > a').attr('href')
+      };
+      resolve(result);
+    });
+  });
+}
+async function pLoveText(text1) {
+  return new Promise((resolve, reject) => {
+    const options = { method: 'POST',
+      url: tema.lovetext,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      formData: { text_1: text1, login: 'OK' } };
+    
+    request(options, async function (error, response, body) {
+      if (error) throw new Error(error);
+      const $ = cheerio.load(body);
+      const result = {
+           url: $('div.btn-group > a').attr('href')
+      };
+      resolve(result);
+    });
+  });
+}
+async function pButterfly(text1) {
+  return new Promise((resolve, reject) => {
+    const options = { method: 'POST',
+      url: tema.butterfly,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      formData: { text_1: text1, login: 'OK' } };
+    
+    request(options, async function (error, response, body) {
+      if (error) throw new Error(error);
+      const $ = cheerio.load(body);
+      const result = {
+           url: $('div.btn-group > a').attr('href')
+      };
+      resolve(result);
+    });
+  });
+}
+
 
 // Export all functions as a single default export
 export default {
