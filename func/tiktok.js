@@ -2,35 +2,35 @@ import TikTokScraper from 'tiktok-scraper';
 
 // Function to get TikTok video metadata
 async function TiktokData(url) {
-    const videoMeta = await TikTokScraper.getVideoMeta(url);
-    return ({
-        status: true,
-        code: 200,
-        creator: "Qasim Ali",
-        judul: videoMeta.collector[0].text,
-        video_URL: {
-            vid_wm: videoMeta.collector[0].videoUrl,
-            vid_nowm: videoMeta.collector[0].videoUrlNoWaterMark
-        }
-    });
+    try {
+        const videoMeta = await TikTokScraper.getVideoMeta(url);
+        return {
+            status: true,
+            code: 200,
+            creator: "Qasim Ali",
+            judul: videoMeta.collector[0].text,
+            video_URL: {
+                vid_wm: videoMeta.collector[0].videoUrl,
+                vid_nowm: videoMeta.collector[0].videoUrlNoWaterMark
+            }
+        };
+    } catch (error) {
+        throw new Error(`Error fetching video metadata: ${error.message}`);
+    }
 }
 
-// Main TikTok function
-const Tiktok = (url) => new Promise((resolve, reject) => {
-    if (url === 'undefined') { 
-        reject('Provide Text Bro.'); 
+// Main TikTok function using async/await for clarity and consistency
+const Tiktok = async (url) => {
+    if (!url) {
+        throw new Error('Provide a valid URL.');
     }
     try {
-        TiktokData(url).then(data => {
-            resolve(data);
-        });
+        const data = await TiktokData(url);
+        return data;
     } catch (error) {
-        reject({
-            code: 400,
-            message: error
-        });
+        throw new Error(error.message || 'Unknown error occurred');
     }
-});
+};
 
 // Exporting the Tiktok function as default export
 export default Tiktok;
