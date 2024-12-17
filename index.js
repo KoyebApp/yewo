@@ -25,6 +25,7 @@ import ytdll from './routes/ytdl.js'
 import vadapav from './routes/vp.js'
 import news from './routes/news.js'
 import photooxy from './routes/photo.js'
+import TikTok from './routes/tiktok.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -73,6 +74,7 @@ app.use('/bingimg', bingimg)
 app.use('/vadapav', vadapav)
 app.use('/news', news)
 app.use('/photooxy', photooxy)
+app.use('/tiktok', tiktok)
 
 app.listen(8080, () => {
   console.log('Server is running on port 8080')
