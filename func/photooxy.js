@@ -143,12 +143,12 @@ async function pMsgGrass(text1) {
   });
 }
 
-async function pGlitch(text1) {
+async function pGlitch(text1, text2) {
   return new Promise((resolve, reject) => {
     const options = { method: 'POST',
-      url: tema.glitch,
+      url: tema.Glitch,
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      formData: { text_1: text1, login: 'OK' } };
+      formData: { text_1: text1, text_2: text2, login: 'OK' } };
     
     request(options, async function (error, response, body) {
       if (error) throw new Error(error);
