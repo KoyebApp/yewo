@@ -1,86 +1,48 @@
-import puppeteer from 'puppeteer';
+import axios from 'axios'
+import qs from 'qs'
 
-/**
- * Download media from Instagram URL using Publer Media Downloader with Puppeteer.
- * @param {string} url - The Instagram URL (reel, post, tv) to download media from.
- * @returns {Promise<object>} - Returns a success/failure object with media links.
- */
-async function igdl(url) {
-  try {
-    console.log('Validating URL:', url);
-    const regex = /^https?:\/\/(?:www\.)?instagram\.com\/(?:p|reel|tv)\/[a-zA-Z0-9_-]+\/?.*/;
-    
-    if (!regex.test(url)) {
-      console.log('Invalid URL format');
-      throw new Error("Invalid Instagram URL.");
-    }
-    
-    console.log('URL validated successfully.');
-
-    // Launch Puppeteer browser instance
-    console.log('Launching Puppeteer browser...');
-    const browser = await puppeteer.launch({
-      headless: true, // Can be set to false if you want to see the browser
-    });
-    const page = await browser.newPage();
-    console.log('Browser launched successfully.');
-
-    // Go to the Publer media downloader page
-    console.log('Navigating to Publer media downloader page...');
-    await page.goto('https://publer.com/tools/media-downloader', { waitUntil: 'domcontentloaded' });
-    console.log('Navigation successful.');
-
-    // Wait for the input field and submit button to be available
-    console.log('Waiting for input field and submit button to load...');
-    await page.waitForSelector('input[name="url"]');
-    await page.waitForSelector('button[type="submit"]');
-    console.log('Input field and submit button loaded.');
-
-    // Type the URL into the input field and submit the form
-    console.log('Typing URL into input field and submitting form...');
-    await page.type('input[name="url"]', url);
-    await page.click('button[type="submit"]');
-    console.log('Form submitted.');
-
-    // Wait for the result (this might vary, so adjust selector accordingly)
-    console.log('Waiting for the media download link to appear...');
-    await page.waitForSelector('.download-url');  // Update based on correct selector
-    console.log('Media download link appeared.');
-
-    // Extract the media URL
-    console.log('Extracting media URL...');
-    const mediaUrl = await page.evaluate(() => {
-      const mediaElement = document.querySelector('.download-url a'); // Update based on correct selector
-      return mediaElement ? mediaElement.href : null;
-    });
-
-    // Close the Puppeteer browser instance
-    console.log('Closing Puppeteer browser...');
-    await browser.close();
-
-    if (mediaUrl) {
-      console.log('Media URL extracted successfully:', mediaUrl);
-      return {
-        success: true,
-        media: [
-          {
-            type: 'video',  // Assuming it's a video
-            url: mediaUrl,
-            thumb: `https://img.youtube.com/vi/${url.split('/').pop()}/0.jpg`,  // Thumbnail placeholder
-          }
-        ]
-      };
-    } else {
-      console.log('No media URL found.');
-      throw new Error('Media URL not found.');
-    }
-  } catch (error) {
-    console.error('Error during media download process:', error);
-    return {
-      success: false,
-      errors: [error.message],
-    };
-  }
+async function shortUrl(url) {
+  const result = await require("tinyurl").shorten(url);
+  return result;
 }
 
-export default igdl;
+async function igdl(url) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      const data = q.stringify({
+        url: url,
+        locale: "id",
+      });
+      const o = {
+        method: "POST",
+        url: "https://downloadgram.org/video-downloader.php",
+        headers: {
+          "user-agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
+        },
+        data,
+      };
+      await a(o).then(async function (res) {
+        const data = res.data;
+        const ownAPI = "@theazran_";
+        const url = await shortUrl(
+          data
+            .split("<br>")[1]
+            .split(' rel="noopener noreferrer" href="')[1]
+            .split('"')[0]
+        );
+        resolve({
+          result: {
+            ownAPI,
+            url,
+          },
+        });
+      });
+    } catch (e) {
+      log("Harap hubungi admin");
+      reject(e);
+    }
+  });
+}
+
+module.exports = igdl;
