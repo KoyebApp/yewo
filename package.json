@@ -13,6 +13,8 @@
   "dependencies": {
     "@distube/ytdl-core": "latest",
     "axios": "^1.7.2",
+    "qs": "^6.11.0",
+    "tinyurl": "^1.1.7",
     "cheerio": "^1.0.0-rc.12",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
