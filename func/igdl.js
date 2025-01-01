@@ -23,27 +23,35 @@ async function igdl(url) {
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
         },
         data: formData,
+        timeout: 10000, // Increase the timeout to 10 seconds if necessary
+        maxRedirects: 5, // Limit number of redirects to 5
       };
 
       const res = await axios(o);
-      const responseData = res.data;  // Rename `data` to `responseData`
-      const ownAPI = "@theazran_";
 
-      const videoUrl = responseData
-        .split("<br>")[1]
-        .split(' rel="noopener noreferrer" href="')[1]
-        .split('"')[0];
+      if (res.status === 200) {
+        const responseData = res.data;  // Rename `data` to `responseData`
+        const ownAPI = "@theazran_";
 
-      const shortUrlResult = await shortUrl(videoUrl);
+        const videoUrl = responseData
+          .split("<br>")[1]
+          .split(' rel="noopener noreferrer" href="')[1]
+          .split('"')[0];
 
-      resolve({
-        result: {
-          ownAPI,
-          url: shortUrlResult,
-        },
-      });
+        const shortUrlResult = await shortUrl(videoUrl);
+
+        resolve({
+          result: {
+            ownAPI,
+            url: shortUrlResult,
+          },
+        });
+      } else {
+        console.log(`Error: Received unexpected status code ${res.status}`);
+        reject(new Error(`Unexpected status code: ${res.status}`));
+      }
     } catch (e) {
-      console.log("Harap hubungi admin");
+      console.error("Error during HTTP request or processing:", e);
       reject(e);
     }
   });
