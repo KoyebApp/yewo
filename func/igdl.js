@@ -8,39 +8,55 @@ import puppeteer from 'puppeteer';
 async function igdl(url) {
   try {
     // Validate URL format
+    console.log('Validating URL:', url);
     const regex = /^https?:\/\/(?:www\.)?instagram\.com\/(?:p|reel|tv)\/[a-zA-Z0-9_-]+\/?.*/;
     if (!regex.test(url)) {
+      console.log('Invalid URL format');
       throw new Error("Invalid Instagram URL.");
     }
+    console.log('URL validated successfully.');
 
     // Launch Puppeteer browser instance
+    console.log('Launching Puppeteer browser...');
     const browser = await puppeteer.launch({ headless: true });  // headless: false if you want to see the browser actions
     const page = await browser.newPage();
+    console.log('Browser launched successfully.');
 
     // Go to the new Publer media downloader page
+    console.log('Navigating to Publer media downloader page...');
     await page.goto('https://publer.com/tools/media-downloader', { waitUntil: 'domcontentloaded' });
+    console.log('Navigation successful.');
 
     // Wait for the input field and submit button to be available
+    console.log('Waiting for input field and submit button to load...');
     await page.waitForSelector('input[name="url"]');
     await page.waitForSelector('button[type="submit"]');
+    console.log('Input field and submit button loaded.');
 
     // Type the URL into the input field and submit the form
+    console.log('Typing URL into input field and submitting form...');
     await page.type('input[name="url"]', url);
     await page.click('button[type="submit"]');
+    console.log('Form submitted successfully.');
 
     // Wait for the result (this might vary, so adjust selector accordingly)
+    console.log('Waiting for the media download link to appear...');
     await page.waitForSelector('.download-url');  // Update based on correct selector
+    console.log('Media download link appeared.');
 
-    // Get the media URL (this is just an example, adjust based on what the website returns)
+    // Get the media URL
+    console.log('Extracting media URL...');
     const mediaUrl = await page.evaluate(() => {
       const mediaElement = document.querySelector('.download-url a'); // Update based on correct selector
       return mediaElement ? mediaElement.href : null;
     });
 
     // Close the Puppeteer browser instance
+    console.log('Closing Puppeteer browser...');
     await browser.close();
 
     if (mediaUrl) {
+      console.log('Media URL extracted successfully:', mediaUrl);
       return {
         success: true,
         media: [
@@ -52,10 +68,11 @@ async function igdl(url) {
         ]
       };
     } else {
+      console.log('No media URL found.');
       throw new Error('Media URL not found.');
     }
   } catch (error) {
-    console.error(error);
+    console.error('Error during media download process:', error);
     return {
       success: false,
       errors: [error.message],
