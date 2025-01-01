@@ -7,25 +7,25 @@ import puppeteer from 'puppeteer';
  */
 async function igdl(url) {
   try {
-    // Validate URL format
     console.log('Validating URL:', url);
     const regex = /^https?:\/\/(?:www\.)?instagram\.com\/(?:p|reel|tv)\/[a-zA-Z0-9_-]+\/?.*/;
+    
     if (!regex.test(url)) {
       console.log('Invalid URL format');
       throw new Error("Invalid Instagram URL.");
     }
+    
     console.log('URL validated successfully.');
 
     // Launch Puppeteer browser instance
     console.log('Launching Puppeteer browser...');
-    const browser = await puppeteer.launch({ 
-      headless: true,  // Make sure the browser runs in headless mode
-      args: ['--no-sandbox', '--disable-setuid-sandbox'], // Common flags to resolve some issues in certain environments
+    const browser = await puppeteer.launch({
+      headless: true, // Can be set to false if you want to see the browser
     });
     const page = await browser.newPage();
     console.log('Browser launched successfully.');
 
-    // Go to the new Publer media downloader page
+    // Go to the Publer media downloader page
     console.log('Navigating to Publer media downloader page...');
     await page.goto('https://publer.com/tools/media-downloader', { waitUntil: 'domcontentloaded' });
     console.log('Navigation successful.');
@@ -40,17 +40,17 @@ async function igdl(url) {
     console.log('Typing URL into input field and submitting form...');
     await page.type('input[name="url"]', url);
     await page.click('button[type="submit"]');
-    console.log('Form submitted successfully.');
+    console.log('Form submitted.');
 
     // Wait for the result (this might vary, so adjust selector accordingly)
     console.log('Waiting for the media download link to appear...');
-    await page.waitForSelector('.download-url', { visible: true });
+    await page.waitForSelector('.download-url');  // Update based on correct selector
     console.log('Media download link appeared.');
 
-    // Extract the media URL from the page
+    // Extract the media URL
     console.log('Extracting media URL...');
     const mediaUrl = await page.evaluate(() => {
-      const mediaElement = document.querySelector('.download-url a');  // Adjust selector based on the correct one
+      const mediaElement = document.querySelector('.download-url a'); // Update based on correct selector
       return mediaElement ? mediaElement.href : null;
     });
 
@@ -64,7 +64,7 @@ async function igdl(url) {
         success: true,
         media: [
           {
-            type: 'video',  // Assuming it's a video; modify if it's an image or other media type
+            type: 'video',  // Assuming it's a video
             url: mediaUrl,
             thumb: `https://img.youtube.com/vi/${url.split('/').pop()}/0.jpg`,  // Thumbnail placeholder
           }
