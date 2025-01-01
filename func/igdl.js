@@ -10,7 +10,7 @@ async function shortUrl(url) {
 async function igdl(url) {
   return new Promise(async (resolve, reject) => {
     try {
-      const data = qs.stringify({
+      const formData = qs.stringify({
         url: url,
         locale: "id",
       });
@@ -22,14 +22,14 @@ async function igdl(url) {
           "user-agent":
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36",
         },
-        data,
+        data: formData,
       };
 
       const res = await axios(o);
-      const data = res.data;
+      const responseData = res.data;  // Rename `data` to `responseData`
       const ownAPI = "@theazran_";
 
-      const videoUrl = data
+      const videoUrl = responseData
         .split("<br>")[1]
         .split(' rel="noopener noreferrer" href="')[1]
         .split('"')[0];
