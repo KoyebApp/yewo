@@ -18,7 +18,10 @@ async function igdl(url) {
 
     // Launch Puppeteer browser instance
     console.log('Launching Puppeteer browser...');
-    const browser = await puppeteer.launch({ headless: true });  // headless: false if you want to see the browser actions
+    const browser = await puppeteer.launch({ 
+      headless: true,  // Make sure the browser runs in headless mode
+      args: ['--no-sandbox', '--disable-setuid-sandbox'], // Common flags to resolve some issues in certain environments
+    });
     const page = await browser.newPage();
     console.log('Browser launched successfully.');
 
@@ -41,13 +44,13 @@ async function igdl(url) {
 
     // Wait for the result (this might vary, so adjust selector accordingly)
     console.log('Waiting for the media download link to appear...');
-    await page.waitForSelector('.download-url');  // Update based on correct selector
+    await page.waitForSelector('.download-url', { visible: true });
     console.log('Media download link appeared.');
 
-    // Get the media URL
+    // Extract the media URL from the page
     console.log('Extracting media URL...');
     const mediaUrl = await page.evaluate(() => {
-      const mediaElement = document.querySelector('.download-url a'); // Update based on correct selector
+      const mediaElement = document.querySelector('.download-url a');  // Adjust selector based on the correct one
       return mediaElement ? mediaElement.href : null;
     });
 
@@ -61,7 +64,7 @@ async function igdl(url) {
         success: true,
         media: [
           {
-            type: 'video',  // Assuming it's a video
+            type: 'video',  // Assuming it's a video; modify if it's an image or other media type
             url: mediaUrl,
             thumb: `https://img.youtube.com/vi/${url.split('/').pop()}/0.jpg`,  // Thumbnail placeholder
           }
