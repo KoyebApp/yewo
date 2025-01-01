@@ -1,18 +1,20 @@
-import axios from 'axios'
-import qs from 'qs'
+import axios from 'axios';
+import qs from 'qs';
+import tinyurl from 'tinyurl-api';  // Use tinyurl-api for URL shortening
 
 async function shortUrl(url) {
-  const result = await require("tinyurl").shorten(url);
+  const result = await tinyurl(url);  // Use tinyurl API to shorten the URL
   return result;
 }
 
 async function igdl(url) {
-  return new Promise(async function (resolve, reject) {
+  return new Promise(async (resolve, reject) => {
     try {
-      const data = q.stringify({
+      const data = qs.stringify({
         url: url,
         locale: "id",
       });
+
       const o = {
         method: "POST",
         url: "https://downloadgram.org/video-downloader.php",
@@ -22,27 +24,29 @@ async function igdl(url) {
         },
         data,
       };
-      await a(o).then(async function (res) {
-        const data = res.data;
-        const ownAPI = "@theazran_";
-        const url = await shortUrl(
-          data
-            .split("<br>")[1]
-            .split(' rel="noopener noreferrer" href="')[1]
-            .split('"')[0]
-        );
-        resolve({
-          result: {
-            ownAPI,
-            url,
-          },
-        });
+
+      const res = await axios(o);
+      const data = res.data;
+      const ownAPI = "@theazran_";
+
+      const videoUrl = data
+        .split("<br>")[1]
+        .split(' rel="noopener noreferrer" href="')[1]
+        .split('"')[0];
+
+      const shortUrlResult = await shortUrl(videoUrl);
+
+      resolve({
+        result: {
+          ownAPI,
+          url: shortUrlResult,
+        },
       });
     } catch (e) {
-      log("Harap hubungi admin");
+      console.log("Harap hubungi admin");
       reject(e);
     }
   });
 }
 
-module.exports = igdl;
+export default igdl;
